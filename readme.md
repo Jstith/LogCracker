@@ -37,4 +37,4 @@ Currently, you can run the python file with a log file passed as an arg and the 
 - Generic reader to get basic infomation about any format
 - Easier access to the library of shell scripts
   - I don't want this to be purely a plug and chug program, but rather a library of scripts (python and bash) with some direction on how to use them in order to speed up the process... and a plug and chug option.
-- A GUI.. of corse
+- A GUI.. of course
