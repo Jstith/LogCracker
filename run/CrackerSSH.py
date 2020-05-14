@@ -48,7 +48,8 @@ class CrackerSSH():
 
         self.__port = 0
         self.__serverName = ''
-        self.__successfulLogins = 0
+        self.__successfulLoginCount = 0
+        self.__successfulLogins = ''
 
         print()
 
@@ -60,7 +61,8 @@ class CrackerSSH():
             if "Server listening" in line:
                 self.__port = int(__arr[len(__arr)-1][:-1])
             if "Accepted password" in line:
-                self.__successfulLogins += 1
+                self.__successfulLoginCount += 1
+                self.__successfulLogins += line
         
         
 
@@ -69,7 +71,7 @@ class CrackerSSH():
         print("\n__________ Log Cracker __________\n")
         print("Log name:\n\n", self.__args[1], "\n")
         print("Log type:\tSSH\n")
-        print("IP Addresses:\n")
+        print("IP Addresses (sorted numerically):\n")
         subprocess.call('chmod 755 scripts/ipCounter.sh', shell = True)
         subprocess.check_call(['scripts/ipCounter.sh', self.__args[1]])
         print()
@@ -78,4 +80,5 @@ class CrackerSSH():
         print("SSH server name is:\t", end ='')
         print(self.__serverName)
         print("Sucessful user logins:\t", end='')
+        print(self.__successfulLoginCount, "\n")
         print(self.__successfulLogins)

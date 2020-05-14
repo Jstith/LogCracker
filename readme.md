@@ -13,7 +13,7 @@ python3 LogCracker.py file.log -type SSH
 
 ## The Idea
 
-In my experience with log analysis in CTFs, I find myself always following a pattern. There many different types of logs, and there are many different things we get asked about logs, but ultimately I do the same thing every time with different data. LogCracker is an attempt to streamline that process and automate pulling information from log files.
+In my experience with log analysis in CTFs, I find myself always following a pattern. There many different types of logs, and there are many different things we get asked about logs, but ultimately I do the same thing every time with different data. LogCracker is an attempt to streamline that process and automate pulling information from log files. What I want this to do is identify the type of log it's given, pull out basic information about that log, and present the user options and scripts to get further information based on what they need to find.
 
 ## How it Works
 
@@ -24,8 +24,8 @@ There are several differnt ways to go about log analysis. LogCracker follows my 
 Currently, you can run the python file with a log file passed as an arg and the program will try to identify what kind of log it is. Currently, the only working option is SSH. If the log is an SSH log, it will parse through the log and dispaly some basic information:
 - What IPs are used
 - What port SSH is running on
-- name of SSH server
-- How many successful logons there were
+- Name of SSH server
+- Successful logons
 
 ![SSH example](resources/ssh_example.png)
 
