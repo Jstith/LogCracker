@@ -27,6 +27,8 @@ Currently, you can run the python file with a log file passed as an arg and the 
 - name of SSH server
 - How many successful logons there were
 
+![SSH example](resources/ssh_example.png)
+
 ## Future Goals
 
 - More information about logs

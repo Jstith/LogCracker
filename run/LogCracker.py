@@ -15,12 +15,12 @@ class LogCracker():
     __logTypes = ["generic, ssh"]
 
     def __init__(self, args):
-        print(args)
-        ssh = CrackerSSH.CrackerSSH(args)
-        if not ssh.didItRun():
+        self.__args = args
+        ssh = CrackerSSH.CrackerSSH(self.__args)
+        if ssh.didItRun():
+            ssh.getInfo()
+        else:
             CrackerGeneric.CrackerGeneric(args)
-    
-    
 
 if __name__ == '__main__':
     LogCracker(sys.argv)
