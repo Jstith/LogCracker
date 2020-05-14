@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 import sys
 import CrackerSSH
 import CrackerGeneric
@@ -14,8 +16,9 @@ class LogCracker():
 
     def __init__(self, args):
         print(args)
-        CrackerSSH.CrackerSSH(args)
-        CrackerGeneric.CrackerGeneric(args)
+        ssh = CrackerSSH.CrackerSSH(args)
+        if not ssh.didItRun():
+            CrackerGeneric.CrackerGeneric(args)
     
     
 
