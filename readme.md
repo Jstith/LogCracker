@@ -19,11 +19,11 @@ In my experience with log analysis in CTFs, I find myself always following a pat
 
 ## How it Works
 
-There are several differnt ways to go about log analysis. LogCracker follows my personal methodology, and uses a combination of python and bash scripts to manipulate the data in the log files.
+There are several different ways to go about log analysis. LogCracker follows my personal methodology, and uses a combination of python and bash scripts to manipulate the data in the log files.
 
 ## What works right now
 
-Currently, you can run the python file with a log file passed as an arg and the program will try to identify what kind of log it is. Right now, the only working option is SSH. If the log is an SSH log, it will parse through the log and dispaly some basic information:
+Currently, you can run the python file with a log file passed as an arg and the program will try to identify what kind of log it is. Right now, the only working option is SSH. If the log is an SSH log, it will parse through the log and display some basic information:
 - What IPs are used
 - What port SSH is running on
 - Name of SSH server
@@ -36,7 +36,7 @@ Currently, you can run the python file with a log file passed as an arg and the 
 - More information about logs
 - User specified information about logs
 - Multiple types of logs
-- Generic reader to get basic infomation about any format
+- Generic reader to get basic information about any format
 - Easier access to the library of shell scripts
   - I don't want this to be purely a plug and chug program, but rather a library of scripts (python and bash) with some direction on how to use them in order to speed up the process... and a plug and chug option.
 - A GUI.. of course
