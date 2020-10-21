@@ -3,7 +3,7 @@ __LogCracker__
 
 ![LogCracker Logo](resources/logcracker.png)
 
-By: _Jstith_ and maybe _Soups71_
+By: _Jstith_
 
 ### NOTE: THIS REPO MUST STAY PRIVATE, THERE IS CYBER SKYLINE STUFF THAT MUST BE REMOVED BEFORE THIS GOES PUBLIC
 
