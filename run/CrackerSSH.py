@@ -16,7 +16,7 @@ class CrackerSSH():
         else:
             self.isSSH = False
 
-    # If a identify option is available later, we'd send an override bool here to get evaluated
+    # If an identify option is available later, we'd send an override bool here to get evaluated
     def userCheck(self):
         if(len(self.__args) >= 4):
             for x in range(len(self.__args)):
