@@ -7,25 +7,10 @@ class CrackerSSH():
 
     def __init__(self, args):
         self.__args = args
-        __inFile = open(args[1])
+        __inFile = open(self.__args.log)
         __line = __inFile.readline()
         __inFile.close()
-        if(self.userCheck() and self.formatCheck(__line)):
-            self.isSSH = True
-            self.run()
-        else:
-            self.isSSH = False
-
-    # If an identify option is available later, we'd send an override bool here to get evaluated
-    def userCheck(self):
-        if(len(self.__args) >= 4):
-            for x in range(len(self.__args)):
-                if self.__args[x] == "-type":
-                    if self.__args[x+1] != "SSH":
-                        print("log type is not SSH")
-                        return False
-        return True
-
+        self.run()
 
     def formatCheck(self, line):
         __months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -39,11 +24,6 @@ class CrackerSSH():
                         return True
         return False
 
-
-    def didItRun(self):
-        return self.isSSH
-
-
     def run(self):
 
         self.__port = 0
@@ -53,7 +33,7 @@ class CrackerSSH():
 
         print()
 
-        __inFile = open(self.__args[1])
+        __inFile = open(self.__args.log)
         for line in __inFile:
             __arr = line.split()
             if self.formatCheck(line):
@@ -69,11 +49,11 @@ class CrackerSSH():
 
     def getInfo(self):
         print("\n__________ Log Cracker __________\n")
-        print("Log name:\n\n", self.__args[1], "\n")
+        print("Log name:\n\n", self.__args.log, "\n")
         print("Log type:\tSSH\n")
         print("IP Addresses (sorted numerically):\n")
         subprocess.call('chmod 755 scripts/ipCounter.sh', shell = True)
-        subprocess.check_call(['scripts/ipCounter.sh', self.__args[1]])
+        subprocess.check_call(['scripts/ipCounter.sh', self.__args.log])
         print()
         print("SSH is running on port:\t", end ='')
         print(self.__port)
