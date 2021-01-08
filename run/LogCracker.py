@@ -14,8 +14,6 @@ class LogCracker():
     - Generic (development)
     """
 
-    __logTypes = ["generic, ssh"]
-
     def __init__(self, args):
         self.__args = args
         if(self.__args.log_type == "ssh"):
