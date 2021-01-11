@@ -1,6 +1,4 @@
-import os
 import re
-import subprocess
 from natsort import natsorted
 
 
