@@ -5,63 +5,72 @@ from natsort import natsorted
 
 
 class CrackerSSH():
-
+    # Initialization of the object
     def __init__(self, args):
+        # Public Variables
         self.__log_file = args.log
         self.__log_type = args.log_type
-        file_data = []
+        self.__server_name = ""
+        self.__succ_attempts = []
+        self.__fail_attempts = []
+        self.__ips = []
+        self.__file_data = []
+
+        # Try to read each line of the file into a different index in the list
         try:
             with open(self.__log_file, 'r') as reader:
                 for line in reader:
-                    file_data.append(line)
+                    self.__file_data.append(line)
         except Exception as e:
-            print(f"Error: {e.message}")
-        self.__ips = self.getIPs(file_data)
-        self.run()
+            print(f"Error: {e}")
 
-    def run(self, file_arr):
+    # Gathers information about the log
+    def run_analysis(self):
+        # Grabs the server hostname from the first line
+        self.__server_name = self.__file_data[0].split(" ")[3]
+        self.get_ip()
+        self.__fail_attempts, self.__succ_attempts = self.attempts()
 
-        serverName = file_arr[0].split(" ")[3]
-        successfulLogins = [login for login in file_arr if "Accepted password" in login]
-        successfulLoginCount = len(successfulLogins)
-        ips = self.getIPs(file_arr)
-        print()
-
-        # __inFile = open(self.__args.log)
-        # for line in __inFile:
-        #     __arr = line.split()
-        #     if self.formatCheck(line):
-        #         self.__serverName = __arr[3]
-        #     if "Server listening" in line:
-        #         self.__port = int(__arr[len(__arr)-1][:-1])
-        #     if "Accepted password" in line:
-        #         self.__successfulLoginCount += 1
-        #         self.__successfulLogins += line
-
-    def getIPs(self, file_arr):
+    # Extracts every IP from the time
+    def get_ip(self):
         ips = []
         print("IP Addresses (sorted numerically):\n")
-        for line in file_arr:
+        # For every line check if IPs are present. If so, add them to ip list
+        for line in self.__file_data:
             for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
                 ips.append(ip)
-        ips = natsorted(ips)
-        return ips
+        
+        # Sort the IPs based on their numerical values
+        self.__ips = natsorted(ips)
+
+    # Find the successful and failed attempts
+    def attempts(self):
+        failed = []
+        success = []
+        for line in self.__file_data:
+            if "Failed password" in line:
+                current = line.split(" ")
+                failed.append([current[8], current[10], current[12]])
+            elif "Accepted password" in line:
+                current = line.split(" ")
+                success.append([current[8], current[10], current[12]])
+        return failed, success
 
 
-
-    def getInfo(self):
-        print("\n__________ Log Cracker __________\n")
-        print("Log name:\n\n", self.__args.log, "\n")
-        print("Log type:\tSSH\n")
-        self.getIPs()
+    # Prints useful data found in the file
+    def print_info(self):
+        print("\n__________ RESULTS __________\n")
+        print("\tLog name: ", self.__log_file, "\n")
+        print("\t\Log type: SSH\n")
+        print("___________________ SERVER DETAILS ______________\n")
+        print(f"\tSERVER NAMES: {self.__server_name}")
+        print("\n__________ IPS ____________\n")
         print(*self.__ips, sep='\n')
-        # subprocess.call('chmod 755 scripts/ipCounter.sh', shell = True)
-        # subprocess.check_call(['scripts/ipCounter.sh', self.__args.log])
-        # print()
-        # print("SSH is running on port:\t", end ='')
-        # print(self.__port)
-        # print("SSH server name is:\t", end ='')
-        # print(self.__serverName)
-        # print("Sucessful user logins:\t", end='')
-        # print(self.__successfulLoginCount, "\n")
-        # print(self.__successfulLogins)
+        print()
+        print(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
+        for each in self.__fail_attempts:
+            print(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}")
+        print(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
+        for each in self.__succ_attempts:
+            print(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}")
+        print("\n____________________ END OF RESULTS_________________\n\n")    

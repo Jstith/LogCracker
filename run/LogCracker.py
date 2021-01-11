@@ -6,26 +6,25 @@ from CrackerGeneric import CrackerGeneric
 # Supported log formats
 supported_log_type = ["generic", "ssh"]
 
-class LogCracker():
+def main(args):
+    # Check what type log the file is
+    if(args.log_type == "ssh"):
+        print('Running analysis as if the log is an SSH auth log')
+        ssh = CrackerSSH(args)
+        ssh.run_analysis()
+        ssh.print_info()
+        user_input = input('Was the SSH file successfully analyzed (y or n): ')
+        if user_input != 'y':
+            return False
+    else:
+        print("Running Generic Log scan")
+        CrackerGeneric(args)
+        user_input = input('Was the SSH file successfully analyzed (y or n): ')
+        if user_input != 'y':
+            return False
+    return True    
 
-    """
-    Currently supported formats:
-    - SSH (development)
-    - Generic (development)
-    """
-
-    def __init__(self, args):
-        self.__args = args
-        print(self.__args)
-        if(self.__args.log_type == "ssh"):
-            print('running ssh')
-            ssh = CrackerSSH(self.__args)
-            ssh.getInfo()
-            input('ssh ran')
-        else:
-            CrackerGeneric(self.__args)
-            input('generic ran')
-
+# This functions grabs the arguments passed by the user
 def collectArguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', dest='log', help='Inputed log', required=True)
@@ -35,5 +34,11 @@ def collectArguments():
 
 
 if __name__ == '__main__':
-    args = collectArguments()
-    LogCracker(args)
+    # Arguments passed by the user
+    current_args = collectArguments()
+    # Creates Object for the log passed by the user.
+    current_log = main(current_args)
+    if current_log:
+            print("\nGreat, Hopefully you find what you're looking for!!!\n")
+    else:
+        print("\nPlease start an issue at \"https://github.com/Jstith/LogCracker\"\n")
