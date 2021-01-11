@@ -7,6 +7,7 @@ from CrackerGeneric import CrackerGeneric
 supported_log_type = ["generic", "ssh"]
 
 def main(args):
+    
     # Check what type log the file is
     if(args.log_type == "ssh"):
         print('Running analysis as if the log is an SSH auth log')
@@ -34,8 +35,10 @@ def collectArguments():
 
 
 if __name__ == '__main__':
+    
     # Arguments passed by the user
     current_args = collectArguments()
+    
     # Creates Object for the log passed by the user.
     current_log = main(current_args)
     if current_log:

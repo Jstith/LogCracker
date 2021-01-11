@@ -3,9 +3,11 @@ from natsort import natsorted
 
 
 class CrackerSSH():
+    
     # Initialization of the object
     def __init__(self, args):
-        # Public Variables
+        
+        # Class level Variables
         self.__log_file = args.log
         self.__log_type = args.log_type
         self.__server_name = ""
@@ -24,6 +26,7 @@ class CrackerSSH():
 
     # Gathers information about the log
     def run_analysis(self):
+        
         # Grabs the server hostname from the first line
         self.__server_name = self.__file_data[0].split(" ")[3]
         self.get_ip()
@@ -33,6 +36,7 @@ class CrackerSSH():
     def get_ip(self):
         ips = []
         print("IP Addresses (sorted numerically):\n")
+        
         # For every line check if IPs are present. If so, add them to ip list
         for line in self.__file_data:
             for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
