@@ -13,6 +13,7 @@ def main(args):
         print('Running analysis as if the log is an SSH auth log')
         ssh = CrackerSSH(args)
         ssh.run_analysis()
+        ssh.sort_attempts()
         ssh.print_info()
         user_input = input('Was the SSH file successfully analyzed (y or n): ')
         if user_input != 'y':
