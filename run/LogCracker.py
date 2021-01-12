@@ -15,14 +15,19 @@ def main(args):
         ssh.run_analysis()
         ssh.sort_attempts()
         ssh.print_info()
-        user_input = input('Was the SSH file successfully analyzed (y or n): ')
-        if user_input != 'y':
+        if args.output != ''== None:
+            try:
+                ssh.write_to_file(args.output)
+            except Exception as e:
+                print(f"ERROR: {e}")
+        user_input = input('Was the SSH file successfully analyzed (Y/n): ')
+        if user_input.lower() != 'y' and user_input != '':
             return False
     else:
         print("Running Generic Log scan")
         CrackerGeneric(args)
-        user_input = input('Was the SSH file successfully analyzed (y or n): ')
-        if user_input != 'y':
+        user_input = input('Was the file successfully analyzed (Y/n): ')
+        if user_input.lower() != 'y' and user_input != '':
             return False
     return True    
 
@@ -31,6 +36,7 @@ def collectArguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', dest='log', help='Inputed log', required=True)
     parser.add_argument('-t', '--type', dest='log_type', help='Log format, Supported formats include {}'.format(", ".join(supported_log_type)))
+    parser.add_argument('-o', '--output', dest='output', help='Print formated results to file.')
     options = parser.parse_args()
     return options
 
@@ -43,6 +49,6 @@ if __name__ == '__main__':
     # Creates Object for the log passed by the user.
     current_log = main(current_args)
     if current_log:
-            print("\nGreat, Hopefully you find what you're looking for!!!\n")
+        print("\nGreat, Hopefully you find what you're looking for!!!\n")
     else:
         print("\nPlease start an issue at \"https://github.com/Jstith/LogCracker\"\n")

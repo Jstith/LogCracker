@@ -101,3 +101,20 @@ class CrackerSSH():
         for each in self.__succ_attempts:
             print(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
         print("\n____________________ END OF RESULTS_________________\n\n")    
+    
+
+    # Prints results to file
+    def write_to_file(self, filename):
+        with open(filename, 'a+') as writer:
+            writer.write("\n__________ RESULTS __________\n")
+            writer.write(f"\tLog name: {self.__log_file}\n")
+            writer.write("\tLog type: SSH\n")
+            writer.write("___________________ SERVER DETAILS ______________\n")
+            writer.write(f"\tSERVER NAMES: {self.__server_name}")
+            writer.write(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
+            for each in self.__fail_attempts:
+                writer.write(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}\n")
+            writer.write(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
+            for each in self.__succ_attempts:
+                writer.write(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}\n")
+            writer.write("\n____________________ END OF RESULTS_________________\n") 
