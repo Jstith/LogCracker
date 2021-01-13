@@ -108,4 +108,4 @@ class CrackerSSH():
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
             for each_line in self.__report:
-                writier.write(each_line + "\n")
+                writer.write(each_line + "\n")
