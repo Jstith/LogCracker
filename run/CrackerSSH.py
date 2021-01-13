@@ -83,6 +83,7 @@ class CrackerSSH():
         self.__fail_attempts = new_failed
         self.__succ_attempts = new_success
 
+    # Appends __report variable with information gathered
     def generate_reports(self):
         self.__report.append("\n__________ RESULTS __________\n")
         self.__report.append(f"\tLog name: {self.__log_file}")
@@ -98,13 +99,13 @@ class CrackerSSH():
         self.__report.append("\n____________________ END OF RESULTS_________________\n\n")    
 
     
-    # Prints useful data found in the file
+    # Prints report to STDOUT
     def print_info(self):
         for each_line in self.__report:
             print(each_line)
     
 
-    # Prints results to file
+    # Prints report to file
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
             for each_line in self.__report:

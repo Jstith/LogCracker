@@ -16,9 +16,7 @@ def main(args):
         ssh.sort_attempts()
         ssh.generate_reports()
         ssh.print_info()
-        print(args.output)
         if args.output != '' and args.output != None:
-            print('tyring')
             try:
                 ssh.write_to_file(args.output)
             except Exception as e:
