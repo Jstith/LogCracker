@@ -11,8 +11,9 @@ class CrackerSSH():
         self.__server_name = ""
         self.__succ_attempts = []
         self.__fail_attempts = []
-        self.__ips = []
+        # self.__ips = []
         self.__file_data = []
+        self.__report = []
 
         # Try to read each line of the file into a different index in the list
         try:
@@ -27,21 +28,19 @@ class CrackerSSH():
         
         # Grabs the server hostname from the first line
         self.__server_name = self.__file_data[0].split(" ")[3]
-        self.get_ip()
+        #self.get_ip()
         self.__fail_attempts, self.__succ_attempts = self.attempts()
 
-    
-    
-    # Extracts every IP from the time
-    def get_ip(self):
-        ips = []
-        # For every line check if IPs are present. If so, add them to ip list
-        for line in self.__file_data:
-            for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
-                ips.append(ip)
+    # # Extracts every IP from the time
+    # def get_ip(self):
+    #     ips = []
+    #     # For every line check if IPs are present. If so, add them to ip list
+    #     for line in self.__file_data:
+    #         for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
+    #             ips.append(ip)
         
-        # Sort the IPs based on their numerical values
-        self.__ips = natsorted(ips)
+    #     Sort the IPs based on their numerical values
+    #     self.__ips = natsorted(ips)
 
     # Find the successful and failed attempts
     def attempts(self):
@@ -83,38 +82,30 @@ class CrackerSSH():
         
         self.__fail_attempts = new_failed
         self.__succ_attempts = new_success
+
+    def generate_reports(self):
+        self.__report.append("\n__________ RESULTS __________\n")
+        self.__report.append(f"\tLog name: {self.__log_file}")
+        self.__report.append("\tLog type: SSH\n")
+        self.__report.append("___________________ SERVER DETAILS ______________\n")
+        self.__report.append(f"\tSERVER NAMES: {self.__server_name}")
+        self.__report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
+        for each in self.__fail_attempts:
+            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
+        self.__report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
+        for each in self.__succ_attempts:
+            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
+        self.__report.append("\n____________________ END OF RESULTS_________________\n\n")    
+
     
     # Prints useful data found in the file
     def print_info(self):
-        print("\n__________ RESULTS __________\n")
-        print("\tLog name: ", self.__log_file, "\n")
-        print("\t\Log type: SSH\n")
-        print("___________________ SERVER DETAILS ______________\n")
-        print(f"\tSERVER NAMES: {self.__server_name}")
-        print("\n__________ IPS ____________\n")
-        print(*self.__ips, sep='\n')
-        print()
-        print(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
-        for each in self.__fail_attempts:
-            print(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
-        print(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
-        for each in self.__succ_attempts:
-            print(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
-        print("\n____________________ END OF RESULTS_________________\n\n")    
+        for each_line in self.__report:
+            print(each_line)
     
 
     # Prints results to file
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
-            writer.write("\n__________ RESULTS __________\n")
-            writer.write(f"\tLog name: {self.__log_file}\n")
-            writer.write("\tLog type: SSH\n")
-            writer.write("___________________ SERVER DETAILS ______________\n")
-            writer.write(f"\tSERVER NAMES: {self.__server_name}")
-            writer.write(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
-            for each in self.__fail_attempts:
-                writer.write(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}\n")
-            writer.write(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
-            for each in self.__succ_attempts:
-                writer.write(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}\n")
-            writer.write("\n____________________ END OF RESULTS_________________\n") 
+            for each_line in self.__report:
+                writier.write(each_line + "\n")

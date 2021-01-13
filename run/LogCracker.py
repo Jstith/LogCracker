@@ -14,6 +14,7 @@ def main(args):
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
+        ssh.generate_reports()
         ssh.print_info()
         if args.output != ''== None:
             try:
