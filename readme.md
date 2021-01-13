@@ -10,7 +10,7 @@ By: _Jstith_ and _Soups71_
 ## Usage
 
 ```bash
-python3 LogCracker.py file.log -type SSH
+python3 LogCracker.py -f file.log -t ssh
 ```
 
 ## The Idea
@@ -23,10 +23,9 @@ There are several different ways to go about log analysis. LogCracker follows my
 
 ## What works right now
 
-Currently, you can run the python file with a log file passed as an arg and the program will try to identify what kind of log it is. Right now, the only working option is SSH. If the log is an SSH log, it will parse through the log and display some basic information:
-- What IPs are used
-- What port SSH is running on
+Currently, you can run the python file with a log file passed as an argument and the program will try to identify what kind of log it is. Right now, the only working option is of ssh logs. If the log is an ssh log, it will parse through the log and display some basic information:
 - Name of SSH server
+- Attempted logons
 - Successful logons
 
 ![SSH example](resources/ssh_example.png)
