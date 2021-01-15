@@ -19,7 +19,7 @@ class CrackerSSH():
         try:
             with open(self.__log_file, 'r') as reader:
                 for line in reader:
-                    self.__file_data.append(line)
+                    self.__file_data.append(line.replace("  ", " "))
         except Exception as e:
             print(f"Error: {e}")
 
@@ -47,12 +47,12 @@ class CrackerSSH():
         failed = []
         success = []
         for line in self.__file_data:
-            if "Failed password" in line:
+            if "Failed password" in line and "message repeated" not in line:
                 current = line.split(" ")
-                failed.append([current[8], current[10], current[12]])
-            elif "Accepted password" in line:
+                failed.append([current[len(current)-6], current[len(current)-4], current[len(current)-2]])
+            elif "Accepted password" in line and "message repeated" not in line:
                 current = line.split(" ")
-                success.append([current[8], current[10], current[12]])
+                success.append([current[len(current)-6], current[len(current)-4], current[len(current)-2]])
         return failed, success
 
 
@@ -83,7 +83,6 @@ class CrackerSSH():
         self.__fail_attempts = new_failed
         self.__succ_attempts = new_success
 
-    # Appends __report variable with information gathered
     def generate_reports(self):
         self.__report.append("\n__________ RESULTS __________\n")
         self.__report.append(f"\tLog name: {self.__log_file}")
@@ -99,13 +98,13 @@ class CrackerSSH():
         self.__report.append("\n____________________ END OF RESULTS_________________\n\n")    
 
     
-    # Prints report to STDOUT
+    # Prints useful data found in the file
     def print_info(self):
         for each_line in self.__report:
             print(each_line)
     
 
-    # Prints report to file
+    # Prints results to file
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
             for each_line in self.__report:
