@@ -47,14 +47,13 @@ class CrackerSSH():
         failed = []
         success = []
         for line in self.__file_data:
-            if "Failed password" in line and "message repeated" not in line:
-                current = line.strip().split(" ")
-                print(current)
-                failed.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
-            elif ("Accepted password" in line or "Accepted publickey" in line) and "message repeated" not in line:
-                current = line.strip().split(" ")
-                print(current)
-                success.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
+            if "sshd[" in line: 
+                if "Failed password" in line and "message repeated" not in line:
+                    current = line.strip().split(" ")
+                    failed.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
+                elif ("Accepted password" in line or "Accepted publickey" in line) and "message repeated" not in line:
+                    current = line.strip().split(" ")
+                    success.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
         return failed, success
 
 
@@ -84,6 +83,49 @@ class CrackerSSH():
         
         self.__fail_attempts = new_failed
         self.__succ_attempts = new_success
+
+    def search(self, item, keys):
+        current_search = item
+        items_to_find = keys.split(",")
+        results = []
+        Error = ""
+        for search_term in items_to_find:
+            count = 0
+            if item == "user":
+                for each_item in self.__fail_attempts:
+                    if each_item[0] == search_term:
+                        count += 1
+                for each_item in self.__fail_attempts:
+                    if each_item[0] == search_term:
+                        count += 1    
+            elif item == "port":
+                for each_item in self.__fail_attempts:
+                    if each_item[2] == search_term:
+                        count += 1
+                for each_item in self.__fail_attempts:
+                    if each_item[2] == search_term:
+                        count += 1    
+
+            elif item == "ip":
+                for each_item in self.__fail_attempts:
+                    if each_item[1] == search_term:
+                        count += 1
+                for each_item in self.__fail_attempts:
+                    if each_item[1] == search_term:
+                        count += 1    
+            else:
+                # Do Nothin
+                Error = "Please select proper search term"
+                break
+            results.append([search_term, count])
+        print(f"___________________Specific Search: {' '.join(items_to_find)}__________________________")
+        if len(results) > 0:
+            for each in results:
+                print(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}')
+        else:
+            print(Error)
+        print(f"___________________ End of Specific Search __________________________")
+
 
     def generate_reports(self):
         self.__report.append("\n__________ RESULTS __________\n")
