@@ -50,7 +50,7 @@ class CrackerSSH():
             if "Failed password" in line and "message repeated" not in line:
                 current = line.split(" ")
                 failed.append([current[len(current)-6], current[len(current)-4], current[len(current)-2]])
-            elif "Accepted password" in line and "message repeated" not in line:
+            elif ("Accepted password" in line or "Accepted publickey" in line) and "message repeated" not in line:
                 current = line.split(" ")
                 success.append([current[len(current)-6], current[len(current)-4], current[len(current)-2]])
         return failed, success
