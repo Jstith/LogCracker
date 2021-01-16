@@ -48,12 +48,16 @@ class CrackerSSH():
         success = []
         for line in self.__file_data:
             if "sshd[" in line: 
-                if "Failed password" in line and "message repeated" not in line:
+                if "Failed" in line and "message repeated" not in line:
                     current = line.strip().split(" ")
-                    failed.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
-                elif ("Accepted password" in line or "Accepted publickey" in line) and "message repeated" not in line:
+                    failed.append([current[current.index("from")-1],
+                                   current[current.index("port")-1], 
+                                   current[current.index("port")+1]])
+                elif ("Accepted" in line) and "message repeated" not in line:
                     current = line.strip().split(" ")
-                    success.append([current[current.index("from")-1], current[current.index("port")-1], current[current.index("port")+1]])
+                    success.append([current[current.index("from")-1],
+                                    current[current.index("port")-1],
+                                    current[current.index("port")+1]])
         return failed, success
 
 
@@ -118,35 +122,52 @@ class CrackerSSH():
                 Error = "Please select proper search term"
                 break
             results.append([search_term, count])
-        print(f"___________________Specific Search: {' '.join(items_to_find)}__________________________")
+        print(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
         if len(results) > 0:
             for each in results:
                 print(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}')
         else:
             print(Error)
-        print(f"___________________ End of Specific Search __________________________")
+        print(f"________________ End of Specific Search ________________\n")
+
+    def search_commands(self):
+        commands = []
+        
+        for line in self.__file_data:
+            if "PWD" in line and "COMMAND" in line and "sudo" in line:
+                line = ' '.join(line.split())
+                line_arr = line.split(" ")
+                commands.append([line_arr[line_arr.index("sudo:")+1], 
+                                line[line.index("PWD")+4:].split(" ")[0],
+                                line[line.index("COMMAND=")+len("COMMAND="):]])
+        print("\n______________ SUDO HISTORY _______________")
+        for each in commands:
+             print(f"User: {each[0]}; ",
+                   f"Directory ran in: {each[1]}; ",
+                   f"Command ran: {each[2]}")
+        print("______________ END of SUDO HISTORY _______________\n")
+
 
 
     def generate_reports(self):
-        self.__report.append("\n__________ RESULTS __________\n")
+        self.__report.append("\n__________ BASIC RESULTS __________\n")
         self.__report.append(f"\tLog name: {self.__log_file}")
         self.__report.append("\tLog type: SSH\n")
         self.__report.append("___________________ SERVER DETAILS ______________\n")
-        self.__report.append(f"\tSERVER NAMES: {self.__server_name}")
+        self.__report.append(f"\tSERVER NAME: {self.__server_name}")
         self.__report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
         for each in self.__fail_attempts:
             self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
         self.__report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
         for each in self.__succ_attempts:
             self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
-        self.__report.append("\n____________________ END OF RESULTS_________________\n\n")    
+        self.__report.append("\n____________________ END OF BASIC RESULTS_________________\n\n")    
 
     
     # Prints useful data found in the file
     def print_info(self):
         for each_line in self.__report:
             print(each_line)
-    
 
     # Prints results to file
     def write_to_file(self, filename):

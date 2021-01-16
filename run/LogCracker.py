@@ -14,6 +14,8 @@ def main(args):
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
+        if args.commands:
+            ssh.search_commands()
         if args.search != None and args.search_term != None:
             ssh.search(args.search, args.search_term)
         ssh.generate_reports()
@@ -44,6 +46,7 @@ def collectArguments():
     parser.add_argument('-s', '--search', dest='search', help = "Feature to search: user, port, or IP")
     parser.add_argument('-st', '--search-term', dest='search_term', help='Terms you want to search by separated by a single comma.')
     parser.add_argument('-q', '--quiet', action='store_true', help = 'Silences full report output. However, specific search term results will still show.')
+    parser.add_argument('-c', '--commands', action='store_true', help='Search for commands logged')
     options = parser.parse_args()
     return options
 
