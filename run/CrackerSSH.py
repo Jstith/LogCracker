@@ -1,5 +1,3 @@
-import re
-from natsort import natsorted
 class CrackerSSH():
     
     # Initialization of the object
@@ -11,7 +9,6 @@ class CrackerSSH():
         self.__server_name = ""
         self.__succ_attempts = []
         self.__fail_attempts = []
-        # self.__ips = []
         self.__file_data = []
         self.__report = []
 
@@ -28,19 +25,7 @@ class CrackerSSH():
         
         # Grabs the server hostname from the first line
         self.__server_name = self.__file_data[0].split(" ")[3]
-        #self.get_ip()
         self.__fail_attempts, self.__succ_attempts = self.attempts()
-
-    # # Extracts every IP from the time
-    # def get_ip(self):
-    #     ips = []
-    #     # For every line check if IPs are present. If so, add them to ip list
-    #     for line in self.__file_data:
-    #         for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
-    #             ips.append(ip)
-        
-    #     Sort the IPs based on their numerical values
-    #     self.__ips = natsorted(ips)
 
     # Find the successful and failed attempts
     def attempts(self):
@@ -109,7 +94,6 @@ class CrackerSSH():
                 for each_item in self.__fail_attempts:
                     if each_item[2] == search_term:
                         count += 1    
-
             elif item == "ip":
                 for each_item in self.__fail_attempts:
                     if each_item[1] == search_term:
@@ -132,7 +116,6 @@ class CrackerSSH():
 
     def search_commands(self):
         commands = []
-        
         for line in self.__file_data:
             if "PWD" in line and "COMMAND" in line and "sudo" in line:
                 line = ' '.join(line.split())
