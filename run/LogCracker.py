@@ -14,13 +14,13 @@ def main(args):
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
+        if not args.quiet:
+            ssh.generate_reports()
         if args.commands:
             ssh.search_commands()
         if args.search != None and args.search_term != None:
             ssh.search(args.search, args.search_term)
-        ssh.generate_reports()
-        if not args.quiet:
-            ssh.print_info()
+        ssh.print_info()
         if args.output != '' and args.output != None:
             try:
                 ssh.write_to_file(args.output)

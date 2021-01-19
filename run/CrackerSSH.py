@@ -84,21 +84,21 @@ class CrackerSSH():
                 for each_item in self.__fail_attempts:
                     if each_item[0] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[0] == search_term:
                         count += 1    
             elif item == "port":
                 for each_item in self.__fail_attempts:
                     if each_item[2] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[2] == search_term:
                         count += 1    
             elif item == "ip":
                 for each_item in self.__fail_attempts:
                     if each_item[1] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[1] == search_term:
                         count += 1    
             else:
@@ -106,13 +106,13 @@ class CrackerSSH():
                 Error = "Please select proper search term"
                 break
             results.append([search_term, count])
-        print(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
+        self.__report.append(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
         if len(results) > 0:
             for each in results:
-                print(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}')
+                self.__report.append(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}\n')
         else:
-            print(Error)
-        print(f"________________ End of Specific Search ________________\n")
+            self.__report.append(Error+"\n")
+        self.__report.append(f"________________ End of Specific Search ________________\n")
 
     def search_commands(self):
         commands = []
@@ -123,12 +123,10 @@ class CrackerSSH():
                 commands.append([line_arr[line_arr.index("sudo:")+1], 
                                 line[line.index("PWD")+4:].split(" ")[0],
                                 line[line.index("COMMAND=")+len("COMMAND="):]])
-        print("\n______________ SUDO HISTORY _______________")
+        self.__report.append("\n______________ SUDO HISTORY _______________")
         for each in commands:
-             print(f"User: {each[0]}; ",
-                   f"Directory ran in: {each[1]}; ",
-                   f"Command ran: {each[2]}")
-        print("______________ END of SUDO HISTORY _______________\n")
+             self.__report.append(f"User: {each[0]}; Directory ran in: {each[1]}; Command ran: {each[2]}\n")
+        self.__report.append("______________ END of SUDO HISTORY _______________\n")
 
 
 
