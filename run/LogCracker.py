@@ -10,7 +10,7 @@ def main(args):
     
     # Check what type log the file is
     if(args.log_type == "ssh"):
-        print('Running analysis as if the log is an SSH auth log')
+        print('\nRunning analysis as if the log is an SSH auth log')
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
