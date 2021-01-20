@@ -10,7 +10,7 @@ class CrackerSSH():
         self.__succ_attempts = []
         self.__fail_attempts = []
         self.__file_data = []
-        self.__report = []
+        self.report = []
 
         # Try to read each line of the file into a different index in the list
         try:
@@ -106,13 +106,13 @@ class CrackerSSH():
                 Error = "Please select proper search term"
                 break
             results.append([search_term, count])
-        self.__report.append(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
+        self.report.append(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
         if len(results) > 0:
             for each in results:
-                self.__report.append(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}\n')
+                self.report.append(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}\n')
         else:
-            self.__report.append(Error+"\n")
-        self.__report.append(f"________________ End of Specific Search ________________\n")
+            self.report.append(Error+"\n")
+        self.report.append(f"________________ End of Specific Search ________________\n")
 
     def search_commands(self):
         commands = []
@@ -123,35 +123,35 @@ class CrackerSSH():
                 commands.append([line_arr[line_arr.index("sudo:")+1], 
                                 line[line.index("PWD")+4:].split(" ")[0],
                                 line[line.index("COMMAND=")+len("COMMAND="):]])
-        self.__report.append("\n______________ SUDO HISTORY _______________")
+        self.report.append("\n______________ SUDO HISTORY _______________")
         for each in commands:
-             self.__report.append(f"User: {each[0]}; Directory ran in: {each[1]}; Command ran: {each[2]}\n")
-        self.__report.append("______________ END of SUDO HISTORY _______________\n")
+             self.report.append(f"User: {each[0]}; Directory ran in: {each[1]}; Command ran: {each[2]}\n")
+        self.report.append("______________ END of SUDO HISTORY _______________\n")
 
 
 
     def generate_reports(self):
-        self.__report.append("\n__________ BASIC RESULTS __________\n")
-        self.__report.append(f"\tLog name: {self.__log_file}")
-        self.__report.append("\tLog type: SSH\n")
-        self.__report.append("___________________ SERVER DETAILS ______________\n")
-        self.__report.append(f"\tSERVER NAME: {self.__server_name}")
-        self.__report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
+        self.report.append("\n__________ BASIC RESULTS __________\n")
+        self.report.append(f"\tLog name: {self.__log_file}")
+        self.report.append("\tLog type: SSH\n")
+        self.report.append("___________________ SERVER DETAILS ______________\n")
+        self.report.append(f"\tSERVER NAME: {self.__server_name}")
+        self.report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
         for each in self.__fail_attempts:
-            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
-        self.__report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
+            self.report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
+        self.report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
         for each in self.__succ_attempts:
-            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
-        self.__report.append("\n____________________ END OF BASIC RESULTS_________________\n\n")    
+            self.report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
+        self.report.append("\n____________________ END OF BASIC RESULTS_________________\n\n")    
 
     
     # Prints useful data found in the file
     def print_info(self):
-        for each_line in self.__report:
+        for each_line in self.report:
             print(each_line)
 
     # Prints results to file
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
-            for each_line in self.__report:
+            for each_line in self.report:
                 writer.write(each_line + "\n")
