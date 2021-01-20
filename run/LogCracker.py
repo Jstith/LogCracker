@@ -7,10 +7,8 @@ from CrackerGeneric import CrackerGeneric
 supported_log_type = ["generic", "ssh"]
 
 def main(args):
-    
     # Check what type log the file is
     if(args.log_type == "ssh"):
-        print('\nRunning analysis as if the log is an SSH auth log')
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
@@ -25,17 +23,10 @@ def main(args):
             try:
                 ssh.write_to_file(args.output)
             except Exception as e:
-                print(f"ERROR: {e}")
-        user_input = input('Was the SSH file successfully analyzed (Y/n): ')
-        if user_input.lower() != 'y' and user_input != '':
-            return False
+                return 1
     else:
-        print("Running Generic Log scan")
         CrackerGeneric(args)
-        user_input = input('Was the file successfully analyzed (Y/n): ')
-        if user_input.lower() != 'y' and user_input != '':
-            return False
-    return True    
+    return 0   
 
 # This functions grabs the arguments passed by the user
 def collectArguments():
@@ -58,7 +49,9 @@ if __name__ == '__main__':
     
     # Creates Object for the log passed by the user.
     current_log = main(current_args)
-    if current_log:
-        print("\nGreat, Hopefully you find what you're looking for!!!\n")
-    else:
+    user_input = input('Was the file successfully analyzed (Y/n): ')
+    if user_input.lower() != 'y' and user_input != '':
         print("\nPlease start an issue at \"https://github.com/Jstith/LogCracker\"\n")
+    else:
+        print("\nGreat, Hopefully you find what you're looking for!!!\n")
+        
