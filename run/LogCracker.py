@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 import argparse
-from CrackerSSH import CrackerSSH
-from CrackerGeneric import CrackerGeneric
+from ssh import CrackerSSH
+from generic import CrackerGeneric
 
 # Supported log formats
 supported_log_type = ["generic", "ssh"]

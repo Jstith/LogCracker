@@ -4,3 +4,5 @@ CyberSkyline
 output.txt
 /logs
 useless.py
+run/ssh/__pycache__
+run/generic/__pycache__
