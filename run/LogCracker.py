@@ -1,41 +1,32 @@
 #! /usr/bin/python3
 import argparse
-from CrackerSSH import CrackerSSH
-from CrackerGeneric import CrackerGeneric
+from ssh import CrackerSSH
+from generic import CrackerGeneric
 
 # Supported log formats
 supported_log_type = ["generic", "ssh"]
 
 def main(args):
-    
     # Check what type log the file is
     if(args.log_type == "ssh"):
-        print('Running analysis as if the log is an SSH auth log')
         ssh = CrackerSSH(args)
         ssh.run_analysis()
         ssh.sort_attempts()
+        if not args.quiet:
+            ssh.generate_reports()
         if args.commands:
             ssh.search_commands()
         if args.search != None and args.search_term != None:
             ssh.search(args.search, args.search_term)
-        ssh.generate_reports()
-        if not args.quiet:
-            ssh.print_info()
+        ssh.print_info()
         if args.output != '' and args.output != None:
             try:
                 ssh.write_to_file(args.output)
             except Exception as e:
-                print(f"ERROR: {e}")
-        user_input = input('Was the SSH file successfully analyzed (Y/n): ')
-        if user_input.lower() != 'y' and user_input != '':
-            return False
+                return 1
     else:
-        print("Running Generic Log scan")
         CrackerGeneric(args)
-        user_input = input('Was the file successfully analyzed (Y/n): ')
-        if user_input.lower() != 'y' and user_input != '':
-            return False
-    return True    
+    return 0   
 
 # This functions grabs the arguments passed by the user
 def collectArguments():
@@ -58,7 +49,9 @@ if __name__ == '__main__':
     
     # Creates Object for the log passed by the user.
     current_log = main(current_args)
-    if current_log:
-        print("\nGreat, Hopefully you find what you're looking for!!!\n")
-    else:
+    user_input = input('Was the file successfully analyzed (Y/n): ')
+    if user_input.lower() != 'y' and user_input != '':
         print("\nPlease start an issue at \"https://github.com/Jstith/LogCracker\"\n")
+    else:
+        print("\nGreat, Hopefully you find what you're looking for!!!\n")
+        

@@ -5,12 +5,24 @@ __LogCracker__
 
 By: _Jstith_ and _Soups71_
 
-### NOTE: THIS REPO MUST STAY PRIVATE, THERE IS CYBER SKYLINE STUFF THAT MUST BE REMOVED BEFORE THIS GOES PUBLIC
-
 ## Usage
 
-```bash
-python3 LogCracker.py -f file.log -t ssh
+```
+usage: LogCracker.py [-h] -f LOG [-t LOG_TYPE] [-o OUTPUT] [-s SEARCH] [-st SEARCH_TERM] [-q] [-c]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f LOG, --file LOG    Inputed log
+  -t LOG_TYPE, --type LOG_TYPE
+                        Log format, Supported formats include generic, ssh
+  -o OUTPUT, --output OUTPUT
+                        Print formated results to file.
+  -s SEARCH, --search SEARCH
+                        Feature to search: user, port, or IP
+  -st SEARCH_TERM, --search-term SEARCH_TERM
+                        Terms you want to search by separated by a single comma.
+  -q, --quiet           Silences full report output. However, specific search term results will still show.
+  -c, --commands        Search for commands logged
 ```
 
 ## The Idea
@@ -19,7 +31,7 @@ In my experience with log analysis in CTFs, I find myself always following a pat
 
 ## How it Works
 
-There are several different ways to go about log analysis. LogCracker follows my personal methodology, and uses a combination of python and bash scripts to manipulate the data in the log files.
+There are several different ways to go about log analysis. LogCracker follows my personal methodology, and uses a python to manipulate the data in the log files.
 
 ## What works right now
 
@@ -27,8 +39,11 @@ Currently, you can run the python file with a log file passed as an argument and
 - Name of SSH server
 - Attempted logons
 - Successful logons
+- Commands ran as root
+- Search for specific user, IP, or port
 
-![SSH example](resources/ssh_example.png)
+
+![auth.log file example](resources/ssh_example.png)
 
 ## Future Goals
 

@@ -1,5 +1,3 @@
-import re
-from natsort import natsorted
 class CrackerSSH():
     
     # Initialization of the object
@@ -11,9 +9,8 @@ class CrackerSSH():
         self.__server_name = ""
         self.__succ_attempts = []
         self.__fail_attempts = []
-        # self.__ips = []
         self.__file_data = []
-        self.__report = []
+        self.report = []
 
         # Try to read each line of the file into a different index in the list
         try:
@@ -28,19 +25,7 @@ class CrackerSSH():
         
         # Grabs the server hostname from the first line
         self.__server_name = self.__file_data[0].split(" ")[3]
-        #self.get_ip()
         self.__fail_attempts, self.__succ_attempts = self.attempts()
-
-    # # Extracts every IP from the time
-    # def get_ip(self):
-    #     ips = []
-    #     # For every line check if IPs are present. If so, add them to ip list
-    #     for line in self.__file_data:
-    #         for ip in re.findall(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', line):
-    #             ips.append(ip)
-        
-    #     Sort the IPs based on their numerical values
-    #     self.__ips = natsorted(ips)
 
     # Find the successful and failed attempts
     def attempts(self):
@@ -99,22 +84,21 @@ class CrackerSSH():
                 for each_item in self.__fail_attempts:
                     if each_item[0] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[0] == search_term:
                         count += 1    
             elif item == "port":
                 for each_item in self.__fail_attempts:
                     if each_item[2] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[2] == search_term:
                         count += 1    
-
             elif item == "ip":
                 for each_item in self.__fail_attempts:
                     if each_item[1] == search_term:
                         count += 1
-                for each_item in self.__fail_attempts:
+                for each_item in self.__succ_attempts:
                     if each_item[1] == search_term:
                         count += 1    
             else:
@@ -122,17 +106,16 @@ class CrackerSSH():
                 Error = "Please select proper search term"
                 break
             results.append([search_term, count])
-        print(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
+        self.report.append(f"\n_______________ Specific Search: {' '.join(items_to_find)} _______________")
         if len(results) > 0:
             for each in results:
-                print(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}')
+                self.report.append(f'\t{current_search.capitalize()}: {each[0]}\tTimes: {each[1]}\n')
         else:
-            print(Error)
-        print(f"________________ End of Specific Search ________________\n")
+            self.report.append(Error+"\n")
+        self.report.append(f"________________ End of Specific Search ________________\n")
 
     def search_commands(self):
         commands = []
-        
         for line in self.__file_data:
             if "PWD" in line and "COMMAND" in line and "sudo" in line:
                 line = ' '.join(line.split())
@@ -140,37 +123,35 @@ class CrackerSSH():
                 commands.append([line_arr[line_arr.index("sudo:")+1], 
                                 line[line.index("PWD")+4:].split(" ")[0],
                                 line[line.index("COMMAND=")+len("COMMAND="):]])
-        print("\n______________ SUDO HISTORY _______________")
+        self.report.append("\n______________ SUDO HISTORY _______________")
         for each in commands:
-             print(f"User: {each[0]}; ",
-                   f"Directory ran in: {each[1]}; ",
-                   f"Command ran: {each[2]}")
-        print("______________ END of SUDO HISTORY _______________\n")
+             self.report.append(f"User: {each[0]}; Directory ran in: {each[1]}; Command ran: {each[2]}\n")
+        self.report.append("______________ END of SUDO HISTORY _______________\n")
 
 
 
     def generate_reports(self):
-        self.__report.append("\n__________ BASIC RESULTS __________\n")
-        self.__report.append(f"\tLog name: {self.__log_file}")
-        self.__report.append("\tLog type: SSH\n")
-        self.__report.append("___________________ SERVER DETAILS ______________\n")
-        self.__report.append(f"\tSERVER NAME: {self.__server_name}")
-        self.__report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
+        self.report.append("\n__________ BASIC RESULTS __________\n")
+        self.report.append(f"\tLog name: {self.__log_file}")
+        self.report.append("\tLog type: SSH\n")
+        self.report.append("___________________ SERVER DETAILS ______________\n")
+        self.report.append(f"\tSERVER NAME: {self.__server_name}")
+        self.report.append(f"\n____________ FAILED CONNECTIONS: {len(self.__fail_attempts)} ______________\n")
         for each in self.__fail_attempts:
-            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
-        self.__report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
+            self.report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, TIMES: {each[3]}")
+        self.report.append(f"\n____________ SUCCESSFUL CONNECTIONS: {len(self.__succ_attempts)} ______________\n")
         for each in self.__succ_attempts:
-            self.__report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
-        self.__report.append("\n____________________ END OF BASIC RESULTS_________________\n\n")    
+            self.report.append(f"\tUser: {each[0]}, IP: {each[1]}, PORT: {each[2]}, , TIMES: {each[3]}")
+        self.report.append("\n____________________ END OF BASIC RESULTS_________________\n\n")    
 
     
     # Prints useful data found in the file
     def print_info(self):
-        for each_line in self.__report:
+        for each_line in self.report:
             print(each_line)
 
     # Prints results to file
     def write_to_file(self, filename):
         with open(filename, 'a+') as writer:
-            for each_line in self.__report:
+            for each_line in self.report:
                 writer.write(each_line + "\n")

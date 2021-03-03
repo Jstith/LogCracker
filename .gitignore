@@ -3,4 +3,10 @@ run/__pycache__
 CyberSkyline
 output.txt
 /logs
+<<<<<<< HEAD
 data
+=======
+useless.py
+run/ssh/__pycache__
+run/generic/__pycache__
+>>>>>>> fce39d8f88fe98de881209eb3b5603a4b50393d5
